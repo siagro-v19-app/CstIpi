@@ -12,6 +12,7 @@ sap.ui.define([
 		onRefresh: function(){
 			var oModel = this.getOwnerComponent().getModel();
 			oModel.refresh(true);
+			this.getView().byId("tableCstIpi").clearSelection(); 
 		},
 		
 		onIncluir: function(){
@@ -56,7 +57,7 @@ sap.ui.define([
 			});
 			
 			if(nIndex === -1){
-				MessageBox.information("Selecione um CST - IPI da tabela!");
+				MessageBox.warning("Selecione um CST - IPI da tabela!");
 				return;
 			}
 			
@@ -72,7 +73,7 @@ sap.ui.define([
 			var nIndex = oTable.getSelectedIndex();
 			
 			if(nIndex === -1){
-				MessageBox.information("Selecione um CST - IPI da tabela!");
+				MessageBox.warning("Selecione um CST - IPI da tabela!");
 				return;
 			}
 			
@@ -92,19 +93,18 @@ sap.ui.define([
 			var oViewModel = this.getModel("view");
 			
 			if(this._checarCampos(this.getView()) === true){
-				MessageBox.information("Preencha todos os campos obrigatórios!");
+				MessageBox.warning("Preencha todos os campos obrigatórios!");
 				return;
 			} else{
 				oModel.submitChanges({
-					success: function(){
-						oModel.refresh(true);
-						MessageBox.success(oViewModel.getData().msgSalvar);
-						oView.byId("CstIpiDialog").close();
-						oView.byId("tableCstIpi").clearSelection();
-					},
-					error: function(oError){
-						var sError = JSON.parse( oError.responseText).error.message.value; 
-						MessageBox.error(sError);
+					success: function(oResponse){
+						var erro = oResponse.__batchResponses[0].response;
+						if(!erro){
+							oModel.refresh(true);
+							MessageBox.success(oViewModel.getData().msgSalvar);
+							oView.byId("CstIpiDialog").close();
+							oView.byId("tableCstIpi").clearSelection();
+						}
 					}
 				});
 			}
@@ -128,9 +128,6 @@ sap.ui.define([
 				success: function(){
 					oModel.refresh(true);
 					oTable.clearSelection();
-				},
-				error: function(oError){
-					MessageBox.error(oError.responseText);
 				}
 			});
 		},
