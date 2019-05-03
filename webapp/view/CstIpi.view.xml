@@ -25,7 +25,7 @@
 							<Toolbar>
 								<Title text="Lista de IPI"/>
 								<ToolbarSpacer/>
-								<SearchField placeholder="Pesquisar IPI..." width="30%" search="filtraIpi"/>
+								<SearchField placeholder="Pesquisar código..." width="30%" search="filtraIpi"/>
 							</Toolbar>
 						</t:toolbar>
 						<t:columns>
